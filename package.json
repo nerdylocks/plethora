@@ -1,0 +1,11 @@
+{
+  "name": "plethora",
+  "version": "0.0.1",
+  "description": "A commandline program that will output a list of the most dangerous regions on earth given a source of earthquake data.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "author": "Abiy Seifu",
+  "license": "MIT"
+}
