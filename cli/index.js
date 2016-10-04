@@ -7,7 +7,7 @@ const syncService = require('services/sync');
 require('console.table');
 
 program
-.option('-l, --limit <limit>', 'Number of most dangerous to list (default=10)', parseInt)
+.option('-l, --limit <limit>', 'Number of most dangerous places to list (default=10)', parseInt)
 .option('-d, --days <days>', 'Number days to go back to analyze data from (default=30)', parseInt)
 .parse(process.argv);
 
