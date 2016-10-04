@@ -11,7 +11,7 @@ program
 .option('-d, --days <days>', 'Number days to go back to analyze data from (default=30)', parseInt)
 .parse(process.argv);
 
-// ensure database is ready
+// ensure database is ready and table is created if db is empty
 return peristenceManager.sync()
 .then(() => syncService.checkForEarthQuakeDataUpdates())
 .then(() => earthQuakesService.getEarthQuakes({
