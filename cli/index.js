@@ -18,4 +18,9 @@ return peristenceManager.sync()
   limit: program.limit,
   number_of_days: program.days
 }))
-.then(console.table);
+.then(console.table)
+.then(() => process.exit(0))
+.catch(error => {
+  console.log('Error retrieving data', error.stack);
+  process.exit(1);
+});
