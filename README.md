@@ -23,7 +23,7 @@ npm install
 ```
 
 #### Database Setup
-Create the postgres user for the application (replace [username] with your OS X root username):
+Create the postgres user for the application (replace [username] with your operating system's root username):
 
 ```
 psql -U [username] -c "create user plethora_db_admin with password 'password';"
