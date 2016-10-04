@@ -3,7 +3,6 @@
 const _ = require('lodash');
 const Promise = require('bluebird');
 const geohash = require('ngeohash');
-const data = require('../../../../test_data.json');
 const utils = require('services/earthquakes/utils');
 const EarthQuakesModel = require('services/earthquakes/models');
 const geocode = require('services/geocode');
