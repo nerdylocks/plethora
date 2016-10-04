@@ -9,6 +9,7 @@
   "author": "Abiy Seifu",
   "license": "MIT",
   "dependencies": {
+    "assert": "^1.4.1",
     "bluebird": "^3.4.6",
     "commander": "^2.9.0",
     "console.table": "^0.7.0",
