@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const http = require('superagent');
 const Promise = require('bluebird');
-const config = require('config');
+const config = require('config/index.js');
 const earthQuakesService = require('services/earthquakes/controllers/earthquakes_controller.js');
 const USGS_URL = `${config.get('base_data_source_url')}${config.get('data_source_endpoint')}`;
 

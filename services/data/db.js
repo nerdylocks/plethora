@@ -1,7 +1,7 @@
 'use strict';
 
 const Sequelize = require('sequelize');
-const config = require('config');
+const config = require('config/index.js');
 
 const dbOptions = {
   dialect: config.get('database').dialect,
