@@ -19,7 +19,8 @@ const EarthQuakes = db.define('earthquakes', {
   },
   usgs_id: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   mag: {
     type: Sequelize.DECIMAL(10, 5),
@@ -38,19 +39,14 @@ const EarthQuakes = db.define('earthquakes', {
     allowNull: false
   },
   timezone: {
-    type: Sequelize.STRING
+    type: Sequelize.BIGINT
   }
 }, {
   underscored: true,
   timestamps: true,
   createdAt: 'created_at',
-  updatedAt: 'updated_at',
   setterMethods: {},
-  getterMethods: {
-    earth_quake_timestamp: function() {
-      return Number(this.getDataValue('earth_quake_timestamp'));
-    }
-  }
+  getterMethods: {}
 });
 
 module.exports = EarthQuakes;

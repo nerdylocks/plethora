@@ -5,7 +5,7 @@ const Promise = require('bluebird');
 const geohash = require('ngeohash');
 const utils = require('services/earthquakes/utils');
 const EarthQuakesModel = require('services/earthquakes/models');
-const geocode = require('services/geocode');
+const geocodeService = require('services/geocode');
 const LOGGER_PREFIX = 'EARTHQUAKES SERVICE';
 
 // Helper functions
@@ -41,7 +41,7 @@ function getBoundingBoxCoordinates(boundingBoxHashes) {
   });
 }
 
-// Improvement: refactor to support flexible region groupings
+// Improvement: refactor to support flexible region definition
 function groupEarthQuakePointsByBoundingBoxes(points) {
   const hashBoxes = getBoundingBoxHashes(2);
   const boundingBoxCoords = getBoundingBoxCoordinates(hashBoxes);
@@ -97,13 +97,13 @@ function lookUpByMostPopulatedNearestCity(topList, options) {
 
   return Promise.map(list, location => {
     const centroid = location.centroid;
-    return geocode.getNearByCities({coordinates: centroid})
+    return geocodeService.getNearByCities({coordinates: centroid})
     .then(response => {
       // if there are nearby cities
       if (response[0].geoplugin_place) {
         return {
           nearest_populated_place: `${response[0].geoplugin_place}, ${response[0].geoplugin_countryCode}`,
-          total_magnitude: location.total_magnitude,
+          total_magnitude: location.total_magnitude.toPrecision(3),
           earth_quake_count: location.earth_quake_count
         };
       }
@@ -165,6 +165,10 @@ function getEarthQuakes(options) {
 }
 
 module.exports = {
+  // for test purposes only
+  groupEarthQuakePointsByBoundingBoxes,
+
+  // Public methods
   getEarthQuakes,
   persistNewEarthQuakeData,
   getTheLatestEarthQuakeRecord
