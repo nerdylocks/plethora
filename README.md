@@ -8,14 +8,30 @@ These instructions assume you have [Node.js 4.x](https://nodejs.org/en/download/
 
 ```
 https://github.com/nerdylocks/plethora.git
-cd plethora.git
+```
+
+cd into the cloned directory
+
+```
+cd plethora
+```
+
+Install dependencies using NPM:
+
+```
 npm install
 ```
 
 #### Database Setup
+Create the postgres user for the application (replace [username] with your OS X root username):
+
 ```
-psql -c "create user plethora_db_admin with password 'password';"
-psql -c "create database earthquakes_db with owner plethora_db_admin encoding='utf8';"
+psql -U [username] -c "create user plethora_db_admin with password 'password';"
+```
+Create the database and grant the created user as owner:
+
+```
+psql -U [username] -c "create database earthquakes_db with owner plethora_db_admin encoding='utf8';"
 ```
 
 ### Configuration
