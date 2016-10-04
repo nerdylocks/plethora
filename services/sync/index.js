@@ -6,6 +6,7 @@ const Promise = require('bluebird');
 const config = require('config/index.js');
 const earthQuakesService = require('services/earthquakes/controllers/earthquakes_controller.js');
 const USGS_URL = `${config.get('base_data_source_url')}${config.get('data_source_endpoint')}`;
+const LOGGER_PREFIX = 'GEOCODING SERVICE';
 
 // Promise support for superagent
 http.Request.prototype.exec = function() {
@@ -25,7 +26,7 @@ function getData() {
   .get(USGS_URL)
   .exec()
   .catch(error => {
-    console.log(`Error Requesting data from ${USGS_URL}`);
+    console.log(`${LOGGER_PREFIX} Error Requesting data from ${USGS_URL}`);
     return Promise.reject(error);
   });
 }
@@ -33,7 +34,8 @@ function getData() {
 function sync(latestTime, newEarthQuakeData) {
   return Promise.each(newEarthQuakeData, (data) => {
     const newTimeStamp = _.get(data, 'properties.time');
-    if (newTimeStamp >= latestTime) {
+
+    if (!latestTime || newTimeStamp >= latestTime) {
       return earthQuakesService.persistNewEarthQuakeData(data);
     }
 
@@ -58,11 +60,12 @@ function checkForEarthQuakeDataUpdates() {
   })
   .then(() => earthQuakesService.getTheLatestEarthQuakeRecord())
   .then(record => {
-    // if db is empty
+    // if db is empty sync
     if (_.isEmpty(record)) {
       return Promise.resolve(true);
     }
 
+    // compare dates to determine if app should sync
     const latestUSGSEarthQuakeTimeStamp = _.get(response, 'features')[0];
     latestTimeStamp = Number(_.first(record).earth_quake_timestamp);
     return new Date(latestUSGSEarthQuakeTimeStamp) > new Date(latestTimeStamp);
@@ -81,6 +84,10 @@ function checkForEarthQuakeDataUpdates() {
     }
 
     return Promise.resolve();
+  })
+  .catch(error => {
+    console.error(`${LOGGER_PREFIX} Sync Error`, error.stack);
+    return Promise.reject(error);
   });
 }
 
