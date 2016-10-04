@@ -24,7 +24,10 @@ function getData() {
   return http
   .get(USGS_URL)
   .exec()
-  .catch(err => console.log(err.stack));
+  .catch(error => {
+    console.log(`Error Requesting data from ${USGS_URL}`);
+    return Promise.reject(error);
+  });
 }
 
 function sync(latestTime, newEarthQuakeData) {
@@ -45,27 +48,29 @@ function checkForEarthQuakeDataUpdates() {
   let response, latestTimeStamp;
   return getData()
   .tap(data => {
-    try {
-      response = JSON.parse(data.text);
-    } catch(error) {
-      return Promise.reject(new Error('USGS request parse error'));
+    if (!_.isEmpty(data)) {
+      try {
+        response = JSON.parse(data.text);
+      } catch(error) {
+        return Promise.reject(new Error('USGS request parse error'));
+      }
     }
   })
   .then(() => earthQuakesService.getTheLatestEarthQuakeRecord())
   .then(record => {
     // if db is empty
     if (_.isEmpty(record)) {
-      return Promise.resolve();
+      return Promise.resolve(true);
     }
 
-    const generatedTimeStamp = _.get(response, 'metadata.generated');
+    const latestUSGSEarthQuakeTimeStamp = _.get(response, 'features')[0];
     latestTimeStamp = Number(_.first(record).earth_quake_timestamp);
-    return generatedTimeStamp > latestTimeStamp;
+    return new Date(latestUSGSEarthQuakeTimeStamp) > new Date(latestTimeStamp);
   })
   .then(shouldUpdate => {
     if (shouldUpdate) {
       // sync
-      console.log('Found new earthquake data, updating ...');
+      console.log('Found new earthquake data, updating database');
       return sync(latestTimeStamp, response.features)
       .catch(error => {
         if (error.message === 'end_sync') {
@@ -75,7 +80,6 @@ function checkForEarthQuakeDataUpdates() {
       });
     }
 
-    console.log('No USGS new earthquake data');
     return Promise.resolve();
   });
 }
