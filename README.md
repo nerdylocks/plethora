@@ -7,7 +7,7 @@ This project is a commandline program that will output a list of the most danger
 These instructions assume you have [Node.js 4.x] (https://nodejs.org/en/download/) (or above) and [PostgreSQL 9.x](https://www.postgresql.org/download/) already installed.
 
 ```
-https://github.com/nerdylocks/plethora.git
+git clone https://github.com/nerdylocks/plethora.git
 ```
 
 cd into the cloned directory
@@ -39,7 +39,7 @@ psql -U [username] -c "create database earthquakes_db with owner plethora_db_adm
 Provide the absolute path of this project to the following environment variables
 
 ```
-export PATH=$PATH/path/to/plethora
+export PATH=$PATH:/path/to/plethora
 export NODE_PATH=/path/to/plethora/
 ```
 Please note the trailing `/` when storing the `$NODE_PATH`.
